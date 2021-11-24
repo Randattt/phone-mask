@@ -4,9 +4,19 @@ import styles from './PhoneMask.module.scss'
 const PhoneMask = () => {
     const [inputValue, setInputValue] = useState('')
 
+    const _getInputNumbersValue = (value) => {
+        if (['8', '9'].includes(value[1])) {
+            return '+' + value.replace(/\D/g, '');
+        }
+        if (value !== '+') {
+            return value.replace(/\D/g, '');
+        } else {
+            return '+';
+        }
+    }
+
     const handleChange = (e) => {
         let inputNumbersValue = _getInputNumbersValue(e.target.value);
-        console.log(inputNumbersValue)
         let formattedInputValue = '';
         const selectionStart = e.target.selectionStart;
 
@@ -16,7 +26,7 @@ const PhoneMask = () => {
         }
 
         if (e.target.value.length !== selectionStart) {
-            return;
+            return
         }
 
         if (['7', '8', '9'].includes(inputNumbersValue[0])) {
@@ -28,14 +38,12 @@ const PhoneMask = () => {
             setInputValue(formattedInputValue);
 
             if (inputNumbersValue.length > 1) {
-
                 formattedInputValue += '(' + inputNumbersValue.substring(1, 4)
             }
             if (inputNumbersValue.length >= 5) {
                 formattedInputValue += ') ' + inputNumbersValue.substring(4, 7)
             }
             if (inputNumbersValue.length >= 8) {
-
                 formattedInputValue += '-' + inputNumbersValue.substring(7, 9);
             }
             if (inputNumbersValue.length >= 10) {
@@ -56,8 +64,7 @@ const PhoneMask = () => {
 
     const onBackspaceDown = (e) => {
         if (e.code === 'Backspace') {
-            console.log(e.target.value)
-            if (inputValue.length === 2 || inputValue === '7') {
+            if (inputValue.length === 2 || inputValue === '+7 ') {
                 setInputValue('');
             }
         }
@@ -71,20 +78,9 @@ const PhoneMask = () => {
         }
     }
 
-    const _getInputNumbersValue = (value) => {
-        if ('8'.includes(value[1]) || '9'.includes(value[1])) {
-            return '+' + value.replace(/\D/g, '');
-        }
-        if (value !== '+') {
-            return value.replace(/\D/g, '');
-        } else {
-            return '+';
-        }
-    }
-
     return (
         <form className={styles.form}>
-            <input className={styles.input} type="tel" value={inputValue} onChange={handleChange.bind(this)} onKeyDown={onBackspaceDown.bind(this)} onPaste={onPaste.bind(this)}/>
+            <input className={styles.input} placeholder="Номер телефона" autoFocus={true} type="tel" value={inputValue} onChange={handleChange.bind(this)} onKeyDown={onBackspaceDown.bind(this)} onPaste={onPaste.bind(this)}/>
         </form>
     );
 };
